@@ -5,9 +5,15 @@ import ua.nure.kn.teteruk.usermanagment.db.ConnectionFactory;
 import ua.nure.kn.teteruk.usermanagment.db.UserDao;
 import ua.nure.kn.teteruk.usermanagment.db.exception.DatabaseException;
 
+import java.sql.*;
 import java.util.Collection;
 
+import static ua.nure.kn.teteruk.usermanagment.db.constants.SqlConstants.CREATE;
+
 public class HsqldbUserDao implements UserDao {
+
+    private static final String QUERY_EXCEPTION = "Exception occurred during execution query";
+    private static final String CANNOT_CLOSE_CONNECTION_EXCEPTION = "Exception occurred during execution query";
 
     private ConnectionFactory factory;
 
@@ -17,7 +23,25 @@ public class HsqldbUserDao implements UserDao {
 
     @Override
     public User create(User user) throws DatabaseException {
-        return null;
+        Connection connection = factory.createConnection();
+        try (PreparedStatement statement = connection.prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS)) {
+            int k = 1;
+            statement.setString(k++, user.getFirstName());
+            statement.setString(k++, user.getLastName());
+            statement.setDate(k, new Date(user.getDateOfBirth().getTime()));
+
+            validateResult(statement.executeUpdate());
+
+            ResultSet resultSet = statement.getGeneratedKeys();
+            if (resultSet.next()) {
+                user.setId(resultSet.getLong(1));
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException(QUERY_EXCEPTION, e);
+        } finally {
+            tryToCloseConnection(connection);
+        }
+        return user;
     }
 
     @Override
@@ -38,5 +62,19 @@ public class HsqldbUserDao implements UserDao {
     @Override
     public Collection<User> findAll() {
         return null;
+    }
+
+    private void tryToCloseConnection(Connection connection) throws DatabaseException {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            throw new DatabaseException(CANNOT_CLOSE_CONNECTION_EXCEPTION, e);
+        }
+    }
+
+    private void validateResult(int n) throws DatabaseException {
+        if (n != 1) {
+            throw new DatabaseException("Number of expected rows: " + n);
+        }
     }
 }
