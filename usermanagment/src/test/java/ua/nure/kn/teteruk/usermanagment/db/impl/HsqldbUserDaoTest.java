@@ -3,6 +3,7 @@ package ua.nure.kn.teteruk.usermanagment.db.impl;
 import org.junit.Before;
 import org.junit.Test;
 import ua.nure.kn.teteruk.usermanagment.User;
+import ua.nure.kn.teteruk.usermanagment.db.ConnectionFactory;
 import ua.nure.kn.teteruk.usermanagment.db.UserDao;
 import ua.nure.kn.teteruk.usermanagment.db.exception.DatabaseException;
 
@@ -18,6 +19,7 @@ public class HsqldbUserDaoTest {
     private static final String LAST_NAME = "Petrov";
 
     private User user;
+    private ConnectionFactory factory;
     private UserDao dao;
 
     @Before
@@ -25,7 +27,8 @@ public class HsqldbUserDaoTest {
         Date birthDate = new SimpleDateFormat("d-MM-yyyy").parse("10-01-1988");
 
         user = new User(null, FIRST_NAME, LAST_NAME, birthDate);
-        dao = new HsqldbUserDao();
+        factory = new ConnecetionFactoryImpl();
+        dao = new HsqldbUserDao(factory);
     }
 
     @Test

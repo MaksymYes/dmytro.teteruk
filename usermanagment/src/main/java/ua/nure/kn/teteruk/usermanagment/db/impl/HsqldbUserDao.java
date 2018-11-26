@@ -1,12 +1,20 @@
 package ua.nure.kn.teteruk.usermanagment.db.impl;
 
 import ua.nure.kn.teteruk.usermanagment.User;
+import ua.nure.kn.teteruk.usermanagment.db.ConnectionFactory;
 import ua.nure.kn.teteruk.usermanagment.db.UserDao;
 import ua.nure.kn.teteruk.usermanagment.db.exception.DatabaseException;
 
 import java.util.Collection;
 
 public class HsqldbUserDao implements UserDao {
+
+    private ConnectionFactory factory;
+
+    public HsqldbUserDao(ConnectionFactory factory) {
+        this.factory = factory;
+    }
+
     @Override
     public User create(User user) throws DatabaseException {
         return null;
