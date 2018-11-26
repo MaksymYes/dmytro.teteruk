@@ -9,11 +9,11 @@ public interface UserDao {
 
     User create(User user) throws DatabaseException;
 
-    void update(User user);
+    void update(User user) throws DatabaseException;
 
-    void delete(User user);
+    void delete(User user) throws DatabaseException;
 
-    User find(Long id);
+    User find(Long id) throws DatabaseException;
 
-    Collection<User> findAll();
+    Collection<User> findAll() throws DatabaseException;
 }
