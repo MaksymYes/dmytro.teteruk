@@ -36,6 +36,7 @@
             </classpath>
             <formatter type="plain"/>
             <test name="ua.nure.kn.teteruk.usermanagment.UserTest"/>
+            <test name="ua.nure.kn.teteruk.usermanagment.db.impl.HsqldbUserDaoTest"/>
         </junit>
     </target>
 </project>
