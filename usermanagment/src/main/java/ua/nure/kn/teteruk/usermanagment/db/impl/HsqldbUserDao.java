@@ -8,12 +8,11 @@ import ua.nure.kn.teteruk.usermanagment.db.exception.DatabaseException;
 import java.sql.*;
 import java.util.Collection;
 
+import static ua.nure.kn.teteruk.usermanagment.db.constants.ExceptionConstants.*;
+import static ua.nure.kn.teteruk.usermanagment.db.constants.SqlConstants.CALL_IDENTITY;
 import static ua.nure.kn.teteruk.usermanagment.db.constants.SqlConstants.CREATE;
 
 public class HsqldbUserDao implements UserDao {
-
-    private static final String QUERY_EXCEPTION = "Exception occurred during execution query";
-    private static final String CANNOT_CLOSE_CONNECTION_EXCEPTION = "Exception occurred during execution query";
 
     private ConnectionFactory factory;
 
@@ -32,7 +31,8 @@ public class HsqldbUserDao implements UserDao {
 
             validateResult(statement.executeUpdate());
 
-            ResultSet resultSet = statement.getGeneratedKeys();
+            CallableStatement callableStatement = connection.prepareCall(CALL_IDENTITY);
+            ResultSet resultSet = callableStatement.getResultSet();
             if (resultSet.next()) {
                 user.setId(resultSet.getLong(1));
             }
@@ -74,7 +74,7 @@ public class HsqldbUserDao implements UserDao {
 
     private void validateResult(int n) throws DatabaseException {
         if (n != 1) {
-            throw new DatabaseException("Number of expected rows: " + n);
+            throw new DatabaseException(UNEXPECTED_COUNT_OF_ROWS + n);
         }
     }
 }

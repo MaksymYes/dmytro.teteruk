@@ -4,6 +4,8 @@ public class SqlConstants {
     private SqlConstants() {
     }
 
+    public static final String CALL_IDENTITY = "call IDENTITY()";
+
     public static final String CREATE = "INSERT INTO users (firstname, lastname, dateofbirth) VALUES (?, ?, ?)";
     public static final String UPDATE = "";
     public static final String DELETE = "";
