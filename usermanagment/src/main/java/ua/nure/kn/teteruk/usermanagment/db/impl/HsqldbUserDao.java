@@ -7,6 +7,7 @@ import ua.nure.kn.teteruk.usermanagment.db.exception.DatabaseException;
 
 import java.sql.*;
 import java.util.Collection;
+import java.util.Objects;
 
 import static ua.nure.kn.teteruk.usermanagment.db.constants.ExceptionConstants.*;
 import static ua.nure.kn.teteruk.usermanagment.db.constants.SqlConstants.CALL_IDENTITY;
@@ -22,8 +23,10 @@ public class HsqldbUserDao implements UserDao {
 
     @Override
     public User create(User user) throws DatabaseException {
-        Connection connection = factory.createConnection();
-        try (PreparedStatement statement = connection.prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS)) {
+        CallableStatement callableStatement = null;
+        ResultSet resultSet = null;
+        try (Connection connection = factory.createConnection();
+             PreparedStatement statement = connection.prepareStatement(CREATE)) {
             int k = 1;
             statement.setString(k++, user.getFirstName());
             statement.setString(k++, user.getLastName());
@@ -31,15 +34,15 @@ public class HsqldbUserDao implements UserDao {
 
             validateResult(statement.executeUpdate());
 
-            CallableStatement callableStatement = connection.prepareCall(CALL_IDENTITY);
-            ResultSet resultSet = callableStatement.getResultSet();
+            callableStatement = connection.prepareCall(CALL_IDENTITY);
+            resultSet = callableStatement.getResultSet();
             if (resultSet.next()) {
                 user.setId(resultSet.getLong(1));
             }
         } catch (SQLException e) {
             throw new DatabaseException(QUERY_EXCEPTION, e);
         } finally {
-            tryToCloseConnection(connection);
+            tryToCloseOther(callableStatement, resultSet);
         }
         return user;
     }
@@ -64,11 +67,14 @@ public class HsqldbUserDao implements UserDao {
         return null;
     }
 
-    private void tryToCloseConnection(Connection connection) throws DatabaseException {
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            throw new DatabaseException(CANNOT_CLOSE_CONNECTION_EXCEPTION, e);
+    private void tryToCloseOther(CallableStatement callableStatement, ResultSet resultSet) throws DatabaseException {
+        if (Objects.nonNull(callableStatement) && Objects.nonNull(resultSet)) {
+            try {
+                callableStatement.close();
+                resultSet.close();
+            } catch (SQLException e) {
+                throw new DatabaseException(CANNOT_CLOSE_RESOURCES_EXCEPTION, e);
+            }
         }
     }
 
