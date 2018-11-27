@@ -13,6 +13,7 @@ import ua.nure.kn.teteruk.usermanagment.db.UserDao;
 import ua.nure.kn.teteruk.usermanagment.db.exception.DatabaseException;
 
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 
 public class HsqldbUserDaoTest extends DatabaseTestCase {
@@ -58,5 +59,13 @@ public class HsqldbUserDaoTest extends DatabaseTestCase {
 
     @Test
     public void testFindAll() {
+        int expectedSize = 2;
+        try {
+            Collection<User> collection = dao.findAll();
+            assertNotNull("Collection is null", collection);
+            assertEquals("Collection size.", expectedSize, collection.size());
+        } catch (DatabaseException e) {
+            fail(e.toString());
+        }
     }
 }
