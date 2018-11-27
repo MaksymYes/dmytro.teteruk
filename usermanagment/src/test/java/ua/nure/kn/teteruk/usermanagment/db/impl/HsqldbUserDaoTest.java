@@ -55,4 +55,8 @@ public class HsqldbUserDaoTest extends DatabaseTestCase {
             fail(e.toString());
         }
     }
+
+    @Test
+    public void testFindAll() {
+    }
 }
