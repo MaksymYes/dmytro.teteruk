@@ -35,7 +35,7 @@ public class HsqldbUserDao implements UserDao {
             validateResult(statement.executeUpdate());
 
             callableStatement = connection.prepareCall(CALL_IDENTITY);
-            resultSet = callableStatement.getResultSet();
+            resultSet = callableStatement.executeQuery();
             if (resultSet.next()) {
                 user.setId(resultSet.getLong(1));
             }

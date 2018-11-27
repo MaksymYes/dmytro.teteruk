@@ -32,7 +32,7 @@ public class HsqldbUserDaoTest {
     }
 
     @Test
-    public void testCreate() throws ParseException {
+    public void testCreate() {
         assertNull(user.getId());
 
         try {
