@@ -10,5 +10,5 @@ public class SqlConstants {
     public static final String UPDATE = "";
     public static final String DELETE = "";
     public static final String FIND = "";
-    public static final String FIND_ALL = "";
+    public static final String FIND_ALL = "SELECT * FROM users";
 }

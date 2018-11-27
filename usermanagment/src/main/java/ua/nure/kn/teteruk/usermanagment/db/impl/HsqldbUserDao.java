@@ -7,11 +7,11 @@ import ua.nure.kn.teteruk.usermanagment.db.exception.DatabaseException;
 
 import java.sql.*;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Objects;
 
 import static ua.nure.kn.teteruk.usermanagment.db.constants.ExceptionConstants.*;
-import static ua.nure.kn.teteruk.usermanagment.db.constants.SqlConstants.CALL_IDENTITY;
-import static ua.nure.kn.teteruk.usermanagment.db.constants.SqlConstants.CREATE;
+import static ua.nure.kn.teteruk.usermanagment.db.constants.SqlConstants.*;
 
 public class HsqldbUserDao implements UserDao {
 
@@ -63,8 +63,35 @@ public class HsqldbUserDao implements UserDao {
     }
 
     @Override
-    public Collection<User> findAll() {
-        return null;
+    public Collection<User> findAll() throws DatabaseException {
+        Collection<User> result = new LinkedList<>();
+        User user;
+        ResultSet resultSet = null;
+        try (Connection connection = factory.createConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL)) {
+
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                user = new User();
+                int k = 1;
+                user.setId(resultSet.getLong(k++));
+                user.setFirstName(resultSet.getString(k++));
+                user.setLastName(resultSet.getString(k++));
+                user.setDateOfBirth(resultSet.getDate(k));
+                result.add(user);
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException(QUERY_EXCEPTION, e);
+        } finally {
+            if (Objects.nonNull(resultSet)) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    throw new DatabaseException(CANNOT_CLOSE_RESOURCES_EXCEPTION, e);
+                }
+            }
+        }
+        return result;
     }
 
     private void tryToCloseOther(CallableStatement callableStatement, ResultSet resultSet) throws DatabaseException {
