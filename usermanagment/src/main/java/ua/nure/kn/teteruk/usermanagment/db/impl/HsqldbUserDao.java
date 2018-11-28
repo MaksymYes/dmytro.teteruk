@@ -15,17 +15,20 @@ import static ua.nure.kn.teteruk.usermanagment.db.constants.SqlConstants.*;
 
 public class HsqldbUserDao implements UserDao {
 
-    private ConnectionFactory factory;
+    private ConnectionFactory connectionFactory;
 
-    public HsqldbUserDao(ConnectionFactory factory) {
-        this.factory = factory;
+    public HsqldbUserDao() {
+    }
+
+    public HsqldbUserDao(ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
     }
 
     @Override
     public User create(User user) throws DatabaseException {
         CallableStatement callableStatement = null;
         ResultSet resultSet = null;
-        try (Connection connection = factory.createConnection();
+        try (Connection connection = connectionFactory.createConnection();
              PreparedStatement statement = connection.prepareStatement(CREATE)) {
             int k = 1;
             statement.setString(k++, user.getFirstName());
@@ -74,7 +77,7 @@ public class HsqldbUserDao implements UserDao {
         Collection<User> result = new LinkedList<>();
         User user;
         ResultSet resultSet = null;
-        try (Connection connection = factory.createConnection();
+        try (Connection connection = connectionFactory.createConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL)) {
 
             resultSet = statement.executeQuery();
@@ -93,6 +96,15 @@ public class HsqldbUserDao implements UserDao {
             tryToCloseResultSet(resultSet);
         }
         return result;
+    }
+
+    public ConnectionFactory getConnectionFactory() {
+        return connectionFactory;
+    }
+
+    @Override
+    public void setConnectionFactory(ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
     }
 
     private void tryToCloseResultSet(ResultSet resultSet) throws DatabaseException {
