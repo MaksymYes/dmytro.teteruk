@@ -27,17 +27,19 @@ public class HsqldbUserDaoTest extends DatabaseTestCase {
 
     @Override
     protected IDatabaseConnection getConnection() throws Exception {
-        factory = new ConnecetionFactoryImpl();
+        factory = new ConnectionFactoryImpl();
         return new DatabaseConnection(factory.createConnection());
     }
 
     @Override
     protected IDataSet getDataSet() throws Exception {
-        return new XmlDataSet(getClass().getClassLoader().getResourceAsStream("usersDataSet.xml"));
+        IDataSet dataSet = new XmlDataSet(getClass().getClassLoader().getResourceAsStream("usersDataSet.xml"));
+        return dataSet;
     }
 
     @Before
     public void setUp() throws Exception {
+        super.setUp();
         Date birthDate = new SimpleDateFormat("d-MM-yyyy").parse("10-01-1988");
 
         user = new User(null, FIRST_NAME, LAST_NAME, birthDate);

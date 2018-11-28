@@ -8,8 +8,8 @@ import ua.nure.kn.teteruk.usermanagment.db.exception.DatabaseException;
 import java.sql.*;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.Objects;
 
+import static java.util.Objects.nonNull;
 import static ua.nure.kn.teteruk.usermanagment.db.constants.ExceptionConstants.*;
 import static ua.nure.kn.teteruk.usermanagment.db.constants.SqlConstants.*;
 
@@ -42,7 +42,14 @@ public class HsqldbUserDao implements UserDao {
         } catch (SQLException e) {
             throw new DatabaseException(QUERY_EXCEPTION, e);
         } finally {
-            tryToCloseOther(callableStatement, resultSet);
+            tryToCloseResultSet(resultSet);
+            if (nonNull(callableStatement)) {
+                try {
+                    callableStatement.close();
+                } catch (SQLException e) {
+                    throw new DatabaseException(CANNOT_CLOSE_RESOURCES_EXCEPTION, e);
+                }
+            }
         }
         return user;
     }
@@ -83,21 +90,14 @@ public class HsqldbUserDao implements UserDao {
         } catch (SQLException e) {
             throw new DatabaseException(QUERY_EXCEPTION, e);
         } finally {
-            if (Objects.nonNull(resultSet)) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    throw new DatabaseException(CANNOT_CLOSE_RESOURCES_EXCEPTION, e);
-                }
-            }
+            tryToCloseResultSet(resultSet);
         }
         return result;
     }
 
-    private void tryToCloseOther(CallableStatement callableStatement, ResultSet resultSet) throws DatabaseException {
-        if (Objects.nonNull(callableStatement) && Objects.nonNull(resultSet)) {
+    private void tryToCloseResultSet(ResultSet resultSet) throws DatabaseException {
+        if (nonNull(resultSet)) {
             try {
-                callableStatement.close();
                 resultSet.close();
             } catch (SQLException e) {
                 throw new DatabaseException(CANNOT_CLOSE_RESOURCES_EXCEPTION, e);
