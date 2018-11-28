@@ -1,6 +1,5 @@
-package ua.nure.kn.teteruk.usermanagment.db.impl;
+package ua.nure.kn.teteruk.usermanagment.db;
 
-import ua.nure.kn.teteruk.usermanagment.db.ConnectionFactory;
 import ua.nure.kn.teteruk.usermanagment.db.exception.DatabaseException;
 
 import java.sql.Connection;

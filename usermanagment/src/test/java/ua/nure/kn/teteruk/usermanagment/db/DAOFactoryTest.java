@@ -2,7 +2,7 @@ package ua.nure.kn.teteruk.usermanagment.db;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 public class DAOFactoryTest {
 

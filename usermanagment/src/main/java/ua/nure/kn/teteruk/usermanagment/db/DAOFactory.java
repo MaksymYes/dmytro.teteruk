@@ -1,7 +1,5 @@
 package ua.nure.kn.teteruk.usermanagment.db;
 
-import ua.nure.kn.teteruk.usermanagment.db.impl.ConnectionFactoryImpl;
-
 import java.io.IOException;
 import java.util.Properties;
 

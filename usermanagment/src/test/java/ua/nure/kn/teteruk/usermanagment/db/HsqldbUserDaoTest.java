@@ -1,4 +1,4 @@
-package ua.nure.kn.teteruk.usermanagment.db.impl;
+package ua.nure.kn.teteruk.usermanagment.db;
 
 import org.dbunit.DatabaseTestCase;
 import org.dbunit.database.DatabaseConnection;
@@ -9,6 +9,8 @@ import org.junit.Before;
 import org.junit.Test;
 import ua.nure.kn.teteruk.usermanagment.User;
 import ua.nure.kn.teteruk.usermanagment.db.ConnectionFactory;
+import ua.nure.kn.teteruk.usermanagment.db.ConnectionFactoryImpl;
+import ua.nure.kn.teteruk.usermanagment.db.HsqldbUserDao;
 import ua.nure.kn.teteruk.usermanagment.db.UserDao;
 import ua.nure.kn.teteruk.usermanagment.db.exception.DatabaseException;
 

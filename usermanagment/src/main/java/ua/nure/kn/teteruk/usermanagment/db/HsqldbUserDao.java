@@ -1,8 +1,6 @@
-package ua.nure.kn.teteruk.usermanagment.db.impl;
+package ua.nure.kn.teteruk.usermanagment.db;
 
 import ua.nure.kn.teteruk.usermanagment.User;
-import ua.nure.kn.teteruk.usermanagment.db.ConnectionFactory;
-import ua.nure.kn.teteruk.usermanagment.db.UserDao;
 import ua.nure.kn.teteruk.usermanagment.db.exception.DatabaseException;
 
 import java.sql.*;
@@ -13,7 +11,7 @@ import static java.util.Objects.nonNull;
 import static ua.nure.kn.teteruk.usermanagment.db.constants.ExceptionConstants.*;
 import static ua.nure.kn.teteruk.usermanagment.db.constants.SqlConstants.*;
 
-public class HsqldbUserDao implements UserDao {
+class HsqldbUserDao implements UserDao {
 
     private ConnectionFactory connectionFactory;
 
