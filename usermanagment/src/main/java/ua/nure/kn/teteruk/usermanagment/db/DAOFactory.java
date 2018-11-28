@@ -18,16 +18,25 @@ public class DAOFactory {
 
     private final Properties properties;
 
-    public DAOFactory() throws IOException {
+    private final static DAOFactory INSTANCE = new DAOFactory();
+
+    private DAOFactory() {
         properties = new Properties();
-        properties.load(getClass().getClassLoader().getResourceAsStream(PROPERTIES_FILE_NAME));
+        try {
+            properties.load(getClass().getClassLoader().getResourceAsStream(PROPERTIES_FILE_NAME));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static DAOFactory getInstance() {
+        return INSTANCE;
     }
 
     public UserDao getUserDao() {
-        Class aClass = null;
         try {
-            aClass = Class.forName(properties.getProperty(USER_DAO));
-            UserDao userDao = (UserDao) aClass.newInstance();
+            Class clazz = Class.forName(properties.getProperty(USER_DAO));
+            UserDao userDao = (UserDao) clazz.newInstance();
             userDao.setConnectionFactory(getConnectionFactory());
             return userDao;
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
