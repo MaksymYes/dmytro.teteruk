@@ -1,10 +1,11 @@
 package ua.nure.kn.teteruk.usermanagment.db;
 
 import ua.nure.kn.teteruk.usermanagment.db.impl.ConnectionFactoryImpl;
-import ua.nure.kn.teteruk.usermanagment.db.impl.HsqldbUserDao;
 
 import java.io.IOException;
 import java.util.Properties;
+
+import static ua.nure.kn.teteruk.usermanagment.db.constants.ExceptionConstants.CANNOT_CREATE_INSTANCE;
 
 public class DAOFactory {
 
@@ -13,6 +14,7 @@ public class DAOFactory {
     private static final String CONNECTION_USER = "connection.user";
     private static final String CONNECTION_PASS = "connection.password";
     private static final String PROPERTIES_FILE_NAME = "settings.properties";
+    private static final String USER_DAO = "dao.ua.nure.teteruk.usermanagement.db.UserDao";
 
     private final Properties properties;
 
@@ -22,8 +24,15 @@ public class DAOFactory {
     }
 
     public UserDao getUserDao() {
-        UserDao result = null;
-        return result;
+        Class aClass = null;
+        try {
+            aClass = Class.forName(properties.getProperty(USER_DAO));
+            UserDao userDao = (UserDao) aClass.newInstance();
+            userDao.setConnectionFactory(getConnectionFactory());
+            return userDao;
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+            throw new RuntimeException(CANNOT_CREATE_INSTANCE, e);
+        }
     }
 
     private ConnectionFactory getConnectionFactory() {
