@@ -1,5 +1,6 @@
 package ua.nure.kn.teteruk.usermanagment.db;
 
+import com.sun.istack.internal.Nullable;
 import ua.nure.kn.teteruk.usermanagment.User;
 import ua.nure.kn.teteruk.usermanagment.db.exception.DatabaseException;
 
@@ -57,16 +58,56 @@ class HsqldbUserDao implements UserDao {
 
     @Override
     public void update(User user) throws DatabaseException {
+        try (Connection connection = connectionFactory.createConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE)) {
+            int k = 1;
+            statement.setString(k++, user.getFirstName());
+            statement.setString(k++, user.getLastName());
+            statement.setDate(k++, new Date(user.getDateOfBirth().getTime()));
+            statement.setLong(k, user.getId());
 
+            validateResult(statement.executeUpdate());
+        } catch (SQLException e) {
+            throw new DatabaseException(QUERY_EXCEPTION, e);
+        }
     }
 
     @Override
     public void delete(User user) throws DatabaseException {
+        try (Connection connection = connectionFactory.createConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE)) {
 
+            statement.setLong(1, user.getId());
+
+            validateResult(statement.executeUpdate());
+        } catch (SQLException e) {
+            throw new DatabaseException(QUERY_EXCEPTION, e);
+        }
     }
 
     @Override
+    @Nullable
     public User find(Long id) throws DatabaseException {
+        ResultSet resultSet = null;
+        try (Connection connection = connectionFactory.createConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND)) {
+
+            statement.setLong(1, id);
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                User user = new User();
+                int k = 1;
+                user.setId(resultSet.getLong(k++));
+                user.setFirstName(resultSet.getString(k++));
+                user.setLastName(resultSet.getString(k++));
+                user.setDateOfBirth(resultSet.getDate(k));
+                return user;
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException(QUERY_EXCEPTION, e);
+        } finally {
+            tryToCloseResultSet(resultSet);
+        }
         return null;
     }
 
