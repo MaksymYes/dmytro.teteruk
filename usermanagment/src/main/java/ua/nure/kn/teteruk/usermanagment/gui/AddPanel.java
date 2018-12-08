@@ -9,11 +9,17 @@ import static java.util.Objects.isNull;
 
 public class AddPanel extends JPanel implements ActionListener {
 
+    private static final int ROWS = 3;
+    private static final int COLS = 2;
+
     private MainFrame parent;
     private JPanel buttonPanel;
     private JPanel fieldPanel;
     private JButton okButton;
     private JButton cancelButton;
+    private JTextField firstNameField;
+    private JTextField lastNameField;
+    private JTextField dateOfBirthField;
 
     public AddPanel(MainFrame mainFrame) {
         parent = mainFrame;
@@ -33,7 +39,7 @@ public class AddPanel extends JPanel implements ActionListener {
     }
 
     private JPanel getButtonPanel() {
-        if(isNull(buttonPanel)) {
+        if (isNull(buttonPanel)) {
             buttonPanel = new JPanel();
             buttonPanel.add(getOkButton(), null);
             buttonPanel.add(getCancelButton(), null);
@@ -42,14 +48,25 @@ public class AddPanel extends JPanel implements ActionListener {
     }
 
     private JPanel getFieldPanel() {
-        if(isNull(fieldPanel)) {
+        if (isNull(fieldPanel)) {
             fieldPanel = new JPanel();
+            fieldPanel.setLayout(new GridLayout(ROWS, COLS));
+            addLabeledField(fieldPanel, "Имя", getFirstNameField());
+            addLabeledField(fieldPanel, "", getLastNameField());
+            addLabeledField(fieldPanel, "", getDateOfBirthField());
         }
         return fieldPanel;
     }
 
+    private void addLabeledField(JPanel panel, String labelText, JTextField textField) {
+        JLabel label = new JLabel(labelText);
+        label.setLabelFor(textField);
+        panel.add(label);
+        panel.add(textField);
+    }
+
     private JButton getOkButton() {
-        if(isNull(okButton)) {
+        if (isNull(okButton)) {
             okButton = new JButton();
             cancelButton.setText("Ок");
             cancelButton.setName("okButton");
@@ -60,7 +77,7 @@ public class AddPanel extends JPanel implements ActionListener {
     }
 
     private JButton getCancelButton() {
-        if(isNull(cancelButton)) {
+        if (isNull(cancelButton)) {
             cancelButton = new JButton();
             cancelButton.setText("Отмена");
             cancelButton.setName("cancelButton");
@@ -68,5 +85,29 @@ public class AddPanel extends JPanel implements ActionListener {
             cancelButton.addActionListener(this);
         }
         return cancelButton;
+    }
+
+    private JTextField getFirstNameField() {
+        if (isNull(firstNameField)) {
+            firstNameField = new JTextField();
+            firstNameField.setName("firstNameField");
+        }
+        return firstNameField;
+    }
+
+    private JTextField getLastNameField() {
+        if (isNull(lastNameField)) {
+            lastNameField = new JTextField();
+            lastNameField.setName("lastNameField");
+        }
+        return lastNameField;
+    }
+
+    private JTextField getDateOfBirthField() {
+        if (isNull(dateOfBirthField)) {
+            dateOfBirthField = new JTextField();
+            dateOfBirthField.setName("dateOfBirthField");
+        }
+        return dateOfBirthField;
     }
 }
