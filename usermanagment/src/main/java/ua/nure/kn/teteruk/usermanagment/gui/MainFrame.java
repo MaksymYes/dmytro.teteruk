@@ -46,7 +46,7 @@ public class MainFrame extends JFrame {
 
     private AddPanel getAddPanel() {
         if(isNull(addPanel)) {
-            addPanel = new AddPanel();
+            addPanel = new AddPanel(this);
         }
         return addPanel;
     }
