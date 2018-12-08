@@ -33,11 +33,11 @@ public class MainFrameTest extends JFCTestCase {
     @Test
     public void testBrowseControls() {
         find(JPanel.class, "browsePanel");
-        find(JPanel.class, "userTable");
-        find(JPanel.class, "addButton");
-        find(JPanel.class, "editButton");
-        find(JPanel.class, "deleteButton");
-        find(JPanel.class, "detailsButton");
+        find(JTable.class, "userTable");
+        find(JButton.class, "addButton");
+        find(JButton.class, "editButton");
+        find(JButton.class, "deleteButton");
+        find(JButton.class, "detailsButton");
     }
 
     private Component find(Class componentClass, String name) {
