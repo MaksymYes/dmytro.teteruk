@@ -32,6 +32,12 @@ public class BrowsePanel extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        String actionCommand = e.getActionCommand();
+        if ("add".equalsIgnoreCase(actionCommand)) {
+            setVisible(false);
+            parent.showAddPanel();
+        }
+
     }
 
     private JScrollPane getTablePanel() {
