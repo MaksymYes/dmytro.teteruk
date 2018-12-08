@@ -1,5 +1,7 @@
 package ua.nure.kn.teteruk.usermanagment.gui;
 
+import ua.nure.kn.teteruk.usermanagment.db.util.Messages;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -51,9 +53,9 @@ public class AddPanel extends JPanel implements ActionListener {
         if (isNull(fieldPanel)) {
             fieldPanel = new JPanel();
             fieldPanel.setLayout(new GridLayout(ROWS, COLS));
-            addLabeledField(fieldPanel, "Имя", getFirstNameField());
-            addLabeledField(fieldPanel, "Фамилия", getLastNameField());
-            addLabeledField(fieldPanel, "Дата рождения", getDateOfBirthField());
+            addLabeledField(fieldPanel, Messages.getString("AddPanel.first_name"), getFirstNameField());
+            addLabeledField(fieldPanel, Messages.getString("AddPanel.last_name"), getLastNameField());
+            addLabeledField(fieldPanel, Messages.getString("AddPanel.date_of_birth"), getDateOfBirthField());
         }
         return fieldPanel;
     }
@@ -68,7 +70,7 @@ public class AddPanel extends JPanel implements ActionListener {
     private JButton getOkButton() {
         if (isNull(okButton)) {
             okButton = new JButton();
-            okButton.setText("Ок");
+            okButton.setText(Messages.getString("AddPanel.ok"));
             okButton.setName("okButton");
             okButton.setActionCommand("ok");
             okButton.addActionListener(this);
@@ -80,7 +82,7 @@ public class AddPanel extends JPanel implements ActionListener {
         if (isNull(cancelButton)) {
             cancelButton = new JButton();
             cancelButton.setText("Отмена");
-            cancelButton.setName("cancelButton");
+            cancelButton.setName(Messages.getString("AddPanel.cancel"));
             cancelButton.setActionCommand("cancel");
             cancelButton.addActionListener(this);
         }

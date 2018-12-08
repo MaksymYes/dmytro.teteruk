@@ -1,5 +1,7 @@
 package ua.nure.kn.teteruk.usermanagment.gui;
 
+import ua.nure.kn.teteruk.usermanagment.db.util.Messages;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -61,7 +63,7 @@ public class BrowsePanel extends JPanel implements ActionListener {
     private JButton getAddButton() {
         if (isNull(addButton)) {
             addButton = new JButton();
-            addButton.setText("Добавить");
+            addButton.setText(Messages.getString("BrowsePanel.add"));
             addButton.setName("addButton");
             addButton.setActionCommand("add");
             addButton.addActionListener(this);
@@ -72,7 +74,7 @@ public class BrowsePanel extends JPanel implements ActionListener {
     private JButton getEditButton() {
         if (isNull(editButton)) {
             editButton = new JButton();
-            editButton.setText("Редактировать");
+            editButton.setText(Messages.getString("BrowsePanel.edit"));
             editButton.setName("editButton");
             editButton.setActionCommand("edit");
             editButton.addActionListener(this);
@@ -85,7 +87,7 @@ public class BrowsePanel extends JPanel implements ActionListener {
         if (isNull(deleteButton)) {
             deleteButton = new JButton();
             deleteButton.setText("Удалить");
-            deleteButton.setName("deleteButton");
+            deleteButton.setName(Messages.getString("BrowsePanel.delete"));
             deleteButton.setActionCommand("delete");
             deleteButton.addActionListener(this);
         }
@@ -95,7 +97,7 @@ public class BrowsePanel extends JPanel implements ActionListener {
     private JButton getDetailsButton() {
         if (isNull(detailsButton)) {
             detailsButton = new JButton();
-            detailsButton.setText("Подробнее");
+            detailsButton.setText(Messages.getString("BrowsePanel.details"));
             detailsButton.setName("detailsButton");
             detailsButton.setActionCommand("details");
             detailsButton.addActionListener(this);
