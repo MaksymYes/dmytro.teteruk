@@ -5,9 +5,14 @@ import ua.nure.kn.teteruk.usermanagment.db.exception.DatabaseException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class ConnectionFactoryImpl implements ConnectionFactory {
 
+    private static final String CONNECTION_DRIVER = "connection.driver";
+    private static final String CONNECTION_URL = "connection.url";
+    private static final String CONNECTION_USER = "connection.user";
+    private static final String CONNECTION_PASS = "connection.password";
     private static final String DRIVER = "org.hsqldb.jdbcDriver";
     private static final String URL = "jdbc:hsqldb:file:db/usermanagement";
     private static final String USER = "sa";
@@ -25,11 +30,11 @@ public class ConnectionFactoryImpl implements ConnectionFactory {
         password = PASSWORD;
     }
 
-    public ConnectionFactoryImpl(String driver, String url, String user, String password) {
-        this.driver = driver;
-        this.url = url;
-        this.user = user;
-        this.password = password;
+    public ConnectionFactoryImpl(Properties properties) {
+        driver = properties.getProperty(CONNECTION_DRIVER);
+        url = properties.getProperty(CONNECTION_URL);
+        user = properties.getProperty(CONNECTION_USER);
+        password = properties.getProperty(CONNECTION_PASS);
     }
 
     @Override
