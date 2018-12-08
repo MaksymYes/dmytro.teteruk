@@ -52,8 +52,8 @@ public class AddPanel extends JPanel implements ActionListener {
             fieldPanel = new JPanel();
             fieldPanel.setLayout(new GridLayout(ROWS, COLS));
             addLabeledField(fieldPanel, "Имя", getFirstNameField());
-            addLabeledField(fieldPanel, "", getLastNameField());
-            addLabeledField(fieldPanel, "", getDateOfBirthField());
+            addLabeledField(fieldPanel, "Фамилия", getLastNameField());
+            addLabeledField(fieldPanel, "Дата рождения", getDateOfBirthField());
         }
         return fieldPanel;
     }
@@ -68,10 +68,10 @@ public class AddPanel extends JPanel implements ActionListener {
     private JButton getOkButton() {
         if (isNull(okButton)) {
             okButton = new JButton();
-            cancelButton.setText("Ок");
-            cancelButton.setName("okButton");
-            cancelButton.setActionCommand("ok");
-            cancelButton.addActionListener(this);
+            okButton.setText("Ок");
+            okButton.setName("okButton");
+            okButton.setActionCommand("ok");
+            okButton.addActionListener(this);
         }
         return okButton;
     }

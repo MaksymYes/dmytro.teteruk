@@ -23,7 +23,6 @@ public class MainFrame extends JFrame {
     private JPanel browsePanel;
 
     public MainFrame() {
-        super();
         initialize();
     }
 
