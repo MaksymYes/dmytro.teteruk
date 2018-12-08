@@ -7,6 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.swing.*;
 import java.awt.*;
 
 import static junit.extensions.jfcunit.TestHelper.cleanUp;
@@ -23,16 +24,27 @@ public class MainFrameTest extends JFCTestCase {
         mainFrame.setVisible(true);
     }
 
-    private Component find(Class componentClass, String name) {
-        NamedComponentFinder finder = new NamedComponentFinder(componentClass, name);
-        Component component = finder.find(mainFrame, 0);
-        assertNotNull("Could not find component \'" + name +"\'", component);
-        return component;
-    }
-
     @After
     public void tearDown() {
         mainFrame.setVisible(false);
         cleanUp(this);
+    }
+
+    @Test
+    public void testBrowseControls() {
+        find(JPanel.class, "browsePanel");
+        find(JPanel.class, "userTable");
+        find(JPanel.class, "addButton");
+        find(JPanel.class, "editButton");
+        find(JPanel.class, "deleteButton");
+        find(JPanel.class, "detailsButton");
+    }
+
+    private Component find(Class componentClass, String name) {
+        NamedComponentFinder finder = new NamedComponentFinder(componentClass, name);
+        finder.setWait(0);
+        Component component = finder.find(mainFrame, 0);
+        assertNotNull("Could not find component \'" + name +"\'", component);
+        return component;
     }
 }
