@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 
 import static java.util.Objects.isNull;
 
@@ -86,8 +87,8 @@ public class BrowsePanel extends JPanel implements ActionListener {
     private JButton getDeleteButton() {
         if (isNull(deleteButton)) {
             deleteButton = new JButton();
-            deleteButton.setText("Удалить");
-            deleteButton.setName(Messages.getString("BrowsePanel.delete"));
+            deleteButton.setText(Messages.getString("BrowsePanel.delete"));
+            deleteButton.setName("deleteButton");
             deleteButton.setActionCommand("delete");
             deleteButton.addActionListener(this);
         }
@@ -109,6 +110,7 @@ public class BrowsePanel extends JPanel implements ActionListener {
         if (isNull(userTable)) {
             userTable = new JTable();
             userTable.setName("userTable");
+            userTable.setModel(new UserTableModel(Collections.emptyList()));
         }
         return userTable;
     }
