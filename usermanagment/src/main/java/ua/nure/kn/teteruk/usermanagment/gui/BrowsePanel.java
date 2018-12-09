@@ -40,7 +40,6 @@ public class BrowsePanel extends JPanel implements ActionListener {
             setVisible(false);
             parent.showAddPanel();
         }
-
     }
 
     private JScrollPane getTablePanel() {

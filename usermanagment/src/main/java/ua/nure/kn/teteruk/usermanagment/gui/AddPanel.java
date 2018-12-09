@@ -37,7 +37,14 @@ public class AddPanel extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        String actionCommand = e.getActionCommand();
+        if ("ok".equalsIgnoreCase(actionCommand)) {
+            setVisible(false);
+            parent.showBrowsePanel();
+        } else if ("cancel".equalsIgnoreCase(actionCommand)) {
+            setVisible(false);
+            parent.showBrowsePanel();
+        }
     }
 
     private JPanel getButtonPanel() {
