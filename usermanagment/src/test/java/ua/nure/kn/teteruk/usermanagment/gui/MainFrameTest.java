@@ -3,6 +3,7 @@ package ua.nure.kn.teteruk.usermanagment.gui;
 import junit.extensions.jfcunit.JFCTestCase;
 import junit.extensions.jfcunit.JFCTestHelper;
 import junit.extensions.jfcunit.eventdata.MouseEventData;
+import junit.extensions.jfcunit.eventdata.StringEventData;
 import junit.extensions.jfcunit.finder.NamedComponentFinder;
 import org.junit.After;
 import org.junit.Before;
@@ -10,6 +11,7 @@ import org.junit.Test;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Date;
 
 import static junit.extensions.jfcunit.TestHelper.cleanUp;
 
@@ -53,11 +55,21 @@ public class MainFrameTest extends JFCTestCase {
         getHelper().enterClickAndLeave(new MouseEventData(this, addButton));
 
         find(JPanel.class, "addPanel");
-        find(JTextField.class, "firstNameField");
-        find(JTextField.class, "lastNameField");
-        find(JTextField.class, "dateOfBirthField");
-        find(JButton.class, "okButton");
         find(JButton.class, "cancelButton");
+        JTextField firstNameField = (JTextField) find(JTextField.class, "firstNameField");
+        JTextField lastNameField = (JTextField) find(JTextField.class, "lastNameField");
+        JTextField dateOfBirthField = (JTextField) find(JTextField.class, "dateOfBirthField");
+        JButton okButton = (JButton) find(JButton.class, "okButton");
+
+        JTable userTable = (JTable) find(JTable.class, "userTable");
+        assertEquals(0, userTable.getRowCount());
+
+        getHelper().sendString(new StringEventData(this, firstNameField, "John"));
+        getHelper().enterClickAndLeave(new MouseEventData(this, okButton));
+
+        find(JPanel.class, "browsePanel");
+        userTable = (JTable) find(JTable.class, "userTable");
+        assertEquals(1, userTable.getRowCount());
     }
 
     private Component find(Class componentClass, String name) {
