@@ -21,7 +21,12 @@ public class User implements Serializable {
     }
 
     public User(Long id, String firstName, String lastName, Date dateOfBirth) {
-        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public User(String firstName, String lastName, Date dateOfBirth) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
@@ -75,15 +80,15 @@ public class User implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) &&
-                Objects.equals(firstName, user.firstName) &&
-                Objects.equals(lastName, user.lastName) &&
-                Objects.equals(dateOfBirth, user.dateOfBirth);
+        return Objects.equals(id, user.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, dateOfBirth);
+        if(this.getId() == null) {
+            return 0;
+        }
+        return Objects.hash(id);
     }
 
     @Override
