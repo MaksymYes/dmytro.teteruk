@@ -1,5 +1,7 @@
 package ua.nure.kn.teteruk.usermanagment.gui;
 
+import ua.nure.kn.teteruk.usermanagment.db.UserDao;
+import ua.nure.kn.teteruk.usermanagment.db.exception.DatabaseException;
 import ua.nure.kn.teteruk.usermanagment.db.util.Messages;
 
 import javax.swing.*;
@@ -35,10 +37,30 @@ public class BrowsePanel extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        setVisible(false);
         String actionCommand = e.getActionCommand();
         if ("add".equalsIgnoreCase(actionCommand)) {
-            setVisible(false);
             parent.showAddPanel();
+        } else if ("edit".equalsIgnoreCase(actionCommand)) {
+            parent.showEditPanel();
+        } else if ("delete".equalsIgnoreCase(actionCommand)) {
+            deleteUserAction();
+            parent.showBrowsePanel();
+        } else if ("details".equalsIgnoreCase(actionCommand)) {
+            parent.showDetailPanel();
+        } else {
+            parent.showBrowsePanel();
+        }
+    }
+
+    private void deleteUserAction() {
+        Long selectedUserId = (Long) userTable.getValueAt(userTable.getSelectedRow(), 0);
+        UserDao dao = parent.getDao();
+        try {
+            dao.delete(dao.find(selectedUserId));
+        } catch (DatabaseException e1) {
+            JOptionPane.showMessageDialog(this, e1.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -105,12 +127,23 @@ public class BrowsePanel extends JPanel implements ActionListener {
         return detailsButton;
     }
 
-    private JTable getUserTable() {
+    public JTable getUserTable() {
         if (isNull(userTable)) {
             userTable = new JTable();
-            userTable.setName("userTable");
-            userTable.setModel(new UserTableModel(Collections.emptyList()));
         }
+        userTable.setName("userTable");
         return userTable;
+    }
+
+    public void initTable() {
+        UserTableModel model;
+        try {
+            model = new UserTableModel(parent.getDao().findAll());
+        } catch (DatabaseException e) {
+            model = new UserTableModel(Collections.emptyList());
+            JOptionPane.showMessageDialog(this, e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        userTable.setModel(model);
     }
 }

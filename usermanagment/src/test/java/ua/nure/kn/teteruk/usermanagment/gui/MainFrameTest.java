@@ -14,6 +14,8 @@ import ua.nure.kn.teteruk.usermanagment.db.MockUserDao;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.Properties;
 
 import static junit.extensions.jfcunit.TestHelper.cleanUp;
@@ -25,9 +27,9 @@ public class MainFrameTest extends JFCTestCase {
     @Before
     public void setUp() {
         Properties properties = new Properties();
-        properties.setProperty("ua.nure.kn.teteruk.usermanagment.db.MockUserDao", MockUserDao.class.getName());
+        properties.setProperty("dao.ua.nure.kn.teteruk.usermanagement.db.UserDao", MockUserDao.class.getName());
         properties.setProperty("dao.factory", DAOFactoryImpl.class.getName());
-        DAOFactory.getInstance().init(properties);
+        DAOFactory.init(properties);
 
         setHelper(new JFCTestHelper());
         mainFrame = new MainFrame();
@@ -59,6 +61,9 @@ public class MainFrameTest extends JFCTestCase {
 
     @Test
     public void testAddUser() {
+        JTable userTable = (JTable) find(JTable.class, "userTable");
+        assertEquals(0, userTable.getRowCount());
+
         JButton addButton = (JButton) find(JButton.class, "addButton");
         getHelper().enterClickAndLeave(new MouseEventData(this, addButton));
 
@@ -69,10 +74,11 @@ public class MainFrameTest extends JFCTestCase {
         JTextField dateOfBirthField = (JTextField) find(JTextField.class, "dateOfBirthField");
         JButton okButton = (JButton) find(JButton.class, "okButton");
 
-        JTable userTable = (JTable) find(JTable.class, "userTable");
-        assertEquals(0, userTable.getRowCount());
-
         getHelper().sendString(new StringEventData(this, firstNameField, "John"));
+        getHelper().sendString(new StringEventData(this, lastNameField, "Snow"));
+        DateFormat format = DateFormat.getDateInstance();
+        String date = format.format(new Date());
+        getHelper().sendString(new StringEventData(this, dateOfBirthField, date));
         getHelper().enterClickAndLeave(new MouseEventData(this, okButton));
 
         find(JPanel.class, "browsePanel");

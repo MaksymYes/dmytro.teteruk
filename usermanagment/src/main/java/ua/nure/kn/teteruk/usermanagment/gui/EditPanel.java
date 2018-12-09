@@ -1,6 +1,5 @@
 package ua.nure.kn.teteruk.usermanagment.gui;
 
-import com.sun.xml.internal.ws.util.StringUtils;
 import ua.nure.kn.teteruk.usermanagment.User;
 import ua.nure.kn.teteruk.usermanagment.db.exception.DatabaseException;
 import ua.nure.kn.teteruk.usermanagment.db.util.Messages;
@@ -14,31 +13,26 @@ import java.text.ParseException;
 
 import static java.util.Objects.isNull;
 
-public class AddPanel extends JPanel implements ActionListener {
+public class EditPanel extends JPanel implements ActionListener {
 
     private static final int ROWS = 3;
     private static final int COLS = 2;
 
     private MainFrame parent;
     private JPanel buttonPanel;
-    private JPanel fieldPanel;
     private JButton okButton;
     private JButton cancelButton;
+    private JPanel fieldPanel;
     private JTextField firstNameField;
-    private JTextField lastNameField;
-    private JTextField dateOfBirthField;
     private Color bgColor;
+    private JTextField dateOfBirthField;
+    private JTextField lastNameField;
+    private User selectedUser;
 
-    public AddPanel(MainFrame mainFrame) {
-        parent = mainFrame;
+    public EditPanel(MainFrame parent, Long selectedUser) {
+        this.parent = parent;
+        setUser(selectedUser);
         initialize();
-    }
-
-    private void initialize() {
-        setLayout(new BorderLayout());
-        setName("addPanel");
-        add(getFieldPanel(), BorderLayout.NORTH);
-        add(getButtonPanel(), BorderLayout.SOUTH);
     }
 
     @Override
@@ -46,6 +40,7 @@ public class AddPanel extends JPanel implements ActionListener {
         String actionCommand = e.getActionCommand();
         if ("ok".equalsIgnoreCase(actionCommand)) {
             User user = new User();
+            user.setId(selectedUser.getId());
             user.setFirstName(getFirstNameField().getText());
             user.setLastName(getLastNameField().getText());
             DateFormat dateFormat = DateFormat.getDateInstance();
@@ -56,7 +51,7 @@ public class AddPanel extends JPanel implements ActionListener {
                 return;
             }
             try {
-                parent.getDao().create(user);
+                parent.getDao().update(user);
             } catch (DatabaseException e1) {
                 JOptionPane.showMessageDialog(this, e1.getMessage(),
                         "Error", JOptionPane.ERROR_MESSAGE);
@@ -78,13 +73,11 @@ public class AddPanel extends JPanel implements ActionListener {
         getDateOfBirthField().setBackground(bgColor);
     }
 
-    private JPanel getButtonPanel() {
-        if (isNull(buttonPanel)) {
-            buttonPanel = new JPanel();
-            buttonPanel.add(getOkButton(), null);
-            buttonPanel.add(getCancelButton(), null);
-        }
-        return buttonPanel;
+    private void initialize() {
+        setLayout(new BorderLayout());
+        add(getFieldPanel(), BorderLayout.NORTH);
+        add(getButtonsPanel(), BorderLayout.SOUTH);
+        setName("redactPanel");
     }
 
     private JPanel getFieldPanel() {
@@ -103,6 +96,15 @@ public class AddPanel extends JPanel implements ActionListener {
         label.setLabelFor(textField);
         panel.add(label);
         panel.add(textField);
+    }
+
+    private JPanel getButtonsPanel() {
+        if (isNull(buttonPanel)) {
+            buttonPanel = new JPanel();
+            buttonPanel.add(getOkButton(), null);
+            buttonPanel.add(getCancelButton(), null);
+        }
+        return buttonPanel;
     }
 
     private JButton getOkButton() {
@@ -130,6 +132,7 @@ public class AddPanel extends JPanel implements ActionListener {
     private JTextField getFirstNameField() {
         if (isNull(firstNameField)) {
             firstNameField = new JTextField();
+            firstNameField.setText(selectedUser.getFirstName());
             firstNameField.setName("firstNameField");
         }
         return firstNameField;
@@ -138,6 +141,7 @@ public class AddPanel extends JPanel implements ActionListener {
     private JTextField getLastNameField() {
         if (isNull(lastNameField)) {
             lastNameField = new JTextField();
+            lastNameField.setText(selectedUser.getLastName());
             lastNameField.setName("lastNameField");
         }
         return lastNameField;
@@ -146,8 +150,18 @@ public class AddPanel extends JPanel implements ActionListener {
     private JTextField getDateOfBirthField() {
         if (isNull(dateOfBirthField)) {
             dateOfBirthField = new JTextField();
+            dateOfBirthField.setText(selectedUser.getDateOfBirth().toString());
             dateOfBirthField.setName("dateOfBirthField");
         }
         return dateOfBirthField;
+    }
+
+    public void setUser(Long id) {
+        try {
+            selectedUser = parent.getDao().find(id);
+        } catch (DatabaseException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
