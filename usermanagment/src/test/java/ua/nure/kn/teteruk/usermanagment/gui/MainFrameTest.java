@@ -8,10 +8,13 @@ import junit.extensions.jfcunit.finder.NamedComponentFinder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import ua.nure.kn.teteruk.usermanagment.db.DAOFactory;
+import ua.nure.kn.teteruk.usermanagment.db.DAOFactoryImpl;
+import ua.nure.kn.teteruk.usermanagment.db.MockUserDao;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Date;
+import java.util.Properties;
 
 import static junit.extensions.jfcunit.TestHelper.cleanUp;
 
@@ -21,6 +24,11 @@ public class MainFrameTest extends JFCTestCase {
 
     @Before
     public void setUp() {
+        Properties properties = new Properties();
+        properties.setProperty("ua.nure.kn.teteruk.usermanagment.db.MockUserDao", MockUserDao.class.getName());
+        properties.setProperty("dao.factory", DAOFactoryImpl.class.getName());
+        DAOFactory.getInstance().init(properties);
+
         setHelper(new JFCTestHelper());
         mainFrame = new MainFrame();
         mainFrame.setVisible(true);
@@ -37,9 +45,9 @@ public class MainFrameTest extends JFCTestCase {
         JTable table = (JTable) find(JTable.class, "userTable");
 
         assertEquals(3, table.getColumnCount());
-        assertEquals("ID",table.getColumnName(0));
-        assertEquals("Имя",table.getColumnName(1));
-        assertEquals("Фамилия",table.getColumnName(2));
+        assertEquals("ID", table.getColumnName(0));
+        assertEquals("Имя", table.getColumnName(1));
+        assertEquals("Фамилия", table.getColumnName(2));
 
         find(JPanel.class, "browsePanel");
         find(JTable.class, "userTable");
