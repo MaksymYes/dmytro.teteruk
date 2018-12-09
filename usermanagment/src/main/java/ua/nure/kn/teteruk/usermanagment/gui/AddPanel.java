@@ -1,9 +1,8 @@
 package ua.nure.kn.teteruk.usermanagment.gui;
 
-import com.sun.xml.internal.ws.util.StringUtils;
 import ua.nure.kn.teteruk.usermanagment.User;
 import ua.nure.kn.teteruk.usermanagment.db.exception.DatabaseException;
-import ua.nure.kn.teteruk.usermanagment.db.util.Messages;
+import ua.nure.kn.teteruk.usermanagment.gui.util.Messages;
 
 import javax.swing.*;
 import java.awt.*;

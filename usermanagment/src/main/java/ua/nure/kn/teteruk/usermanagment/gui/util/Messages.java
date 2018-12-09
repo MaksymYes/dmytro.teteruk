@@ -1,4 +1,4 @@
-package ua.nure.kn.teteruk.usermanagment.db.util;
+package ua.nure.kn.teteruk.usermanagment.gui.util;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;

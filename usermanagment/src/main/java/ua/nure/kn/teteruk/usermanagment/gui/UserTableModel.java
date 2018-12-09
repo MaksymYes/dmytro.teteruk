@@ -1,7 +1,7 @@
 package ua.nure.kn.teteruk.usermanagment.gui;
 
 import ua.nure.kn.teteruk.usermanagment.User;
-import ua.nure.kn.teteruk.usermanagment.db.util.Messages;
+import ua.nure.kn.teteruk.usermanagment.gui.util.Messages;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;

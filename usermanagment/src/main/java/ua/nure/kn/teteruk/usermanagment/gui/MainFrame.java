@@ -2,7 +2,7 @@ package ua.nure.kn.teteruk.usermanagment.gui;
 
 import ua.nure.kn.teteruk.usermanagment.db.DAOFactory;
 import ua.nure.kn.teteruk.usermanagment.db.UserDao;
-import ua.nure.kn.teteruk.usermanagment.db.util.Messages;
+import ua.nure.kn.teteruk.usermanagment.gui.util.Messages;
 
 import javax.swing.*;
 import java.awt.*;
