@@ -11,11 +11,39 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 
+import static java.util.Objects.nonNull;
+
 public class BrowseServlet extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        browse(req, resp);
+        if (nonNull(req.getParameter("addButton"))) {
+            add(req, resp);
+        } else if (nonNull(req.getParameter("editButton"))) {
+            edit(req, resp);
+        } else if (nonNull(req.getParameter("deleteButton"))) {
+            delete(req, resp);
+        } else if (nonNull(req.getParameter("detailsButton"))) {
+            details(req, resp);
+        } else {
+            browse(req, resp);
+        }
+    }
+
+    private void details(HttpServletRequest req, HttpServletResponse resp) {
+
+    }
+
+    private void delete(HttpServletRequest req, HttpServletResponse resp) {
+
+    }
+
+    private void edit(HttpServletRequest req, HttpServletResponse resp) {
+
+    }
+
+    private void add(HttpServletRequest req, HttpServletResponse resp) {
+
     }
 
     private void browse(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
