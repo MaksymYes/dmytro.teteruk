@@ -7,4 +7,6 @@ lib/
 
 *.txt
 
+usermanagment/users
+
 usermanagment/db
