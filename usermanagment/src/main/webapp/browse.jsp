@@ -12,7 +12,7 @@
         </tr>
         <c:forEach var="user" items="${sessionScope.users}">
             <tr>
-                <td><input type=”radio” name=”id” id=”id” value=”${user.id}”></td>
+                <td><input type="radio" name="id" id="id" value="${user.id}"></td>
                 <td>${user.firstName}</td>
                 <td>${user.lastName}</td>
                 <td>${user.dateOfBirth}</td>
