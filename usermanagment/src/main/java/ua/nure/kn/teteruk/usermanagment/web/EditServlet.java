@@ -46,7 +46,7 @@ public class EditServlet extends HttpServlet {
         req.getRequestDispatcher("/browse").forward(req, resp);
     }
 
-    private void processUser(User user) throws DatabaseException {
+    protected void processUser(User user) throws DatabaseException {
         DAOFactory.getInstance().getUserDao().update(user);
     }
 
@@ -84,7 +84,7 @@ public class EditServlet extends HttpServlet {
         req.getRequestDispatcher("/browse").forward(req, resp);
     }
 
-    private void showPage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void showPage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher("/edit.jsp").forward(req, resp);
     }
 }
