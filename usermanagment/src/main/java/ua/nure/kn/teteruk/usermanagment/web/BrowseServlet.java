@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 public class BrowseServlet extends HttpServlet {
@@ -38,8 +39,22 @@ public class BrowseServlet extends HttpServlet {
 
     }
 
-    private void edit(HttpServletRequest req, HttpServletResponse resp) {
-
+    private void edit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String idStr = req.getParameter("id");
+        if (isNull(idStr) || idStr.isEmpty()) {
+            req.setAttribute("error", "You must select a user");
+            req.getRequestDispatcher("/browse.jsp").forward(req, resp);
+            return;
+        }
+        try {
+            User user = DAOFactory.getInstance().getUserDao().find(new Long(idStr));
+            req.getSession().setAttribute("user", user);
+        } catch (DatabaseException e) {
+            req.setAttribute("error", "ERROR: " + e.toString());
+            req.getRequestDispatcher("/browse.jsp").forward(req, resp);
+            return;
+        }
+        req.getRequestDispatcher("/edit").forward(req, resp);
     }
 
     private void add(HttpServletRequest req, HttpServletResponse resp) {
