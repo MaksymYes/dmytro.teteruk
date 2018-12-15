@@ -28,8 +28,8 @@ public class EditServlet extends HttpServlet {
         }
     }
 
-    private void doOk(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User user = null;
+    protected void doOk(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        User user;
         try {
             user = getUser(req);
         } catch (ValidationException e) {

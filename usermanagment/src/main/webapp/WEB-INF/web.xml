@@ -18,6 +18,11 @@
         <servlet-name>Edit servlet</servlet-name>
         <servlet-class>ua.nure.kn.teteruk.usermanagment.web.EditServlet</servlet-class>
     </servlet>
+
+    <servlet>
+        <servlet-name>Details servlet</servlet-name>
+        <servlet-class>ua.nure.kn.teteruk.usermanagment.web.DetailsServlet</servlet-class>
+    </servlet>
     
     <servlet-mapping>
         <servlet-name>Browse servlet</servlet-name>
@@ -32,5 +37,10 @@
     <servlet-mapping>
         <servlet-name>Edit servlet</servlet-name>
         <url-pattern>/edit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Details servlet</servlet-name>
+        <url-pattern>/details</url-pattern>
     </servlet-mapping>
 </web-app>
