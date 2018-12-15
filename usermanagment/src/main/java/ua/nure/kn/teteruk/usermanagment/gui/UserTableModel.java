@@ -6,7 +6,6 @@ import ua.nure.kn.teteruk.usermanagment.gui.util.Messages;
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class UserTableModel extends AbstractTableModel {
 
@@ -14,10 +13,10 @@ public class UserTableModel extends AbstractTableModel {
             Messages.getString("AddPanel.last_name")};
     private static final Class[] COLUMN_CLASSES = {Long.class, String.class, String.class};
 
-    private List<User> users;
+    private ArrayList<User> users;
 
     public UserTableModel(Collection<User> users) {
-        this.users = new ArrayList(users);
+        this.users = new ArrayList<>(users);
     }
 
     @Override

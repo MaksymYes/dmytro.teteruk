@@ -1,6 +1,5 @@
 package ua.nure.kn.teteruk.usermanagment.db;
 
-import com.sun.istack.internal.Nullable;
 import ua.nure.kn.teteruk.usermanagment.User;
 import ua.nure.kn.teteruk.usermanagment.db.exception.DatabaseException;
 
@@ -86,7 +85,6 @@ class HsqldbUserDao implements UserDao {
     }
 
     @Override
-    @Nullable
     public User find(Long id) throws DatabaseException {
         ResultSet resultSet = null;
         try (Connection connection = connectionFactory.createConnection();
