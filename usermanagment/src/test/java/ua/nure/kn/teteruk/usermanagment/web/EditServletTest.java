@@ -18,7 +18,7 @@ public class EditServletTest extends MockServletTestCase {
     @Test
     public void testEdit() {
         Date date = new Date();
-        User user = new User(new Long(1000), "John", "Doe", new Date());
+        User user = new User(new Long(1000), "John", "Doe", date);
         getMockUserDao().expect("update", user);
 
         addRequestParameter("id", "1000");
