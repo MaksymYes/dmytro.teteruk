@@ -58,6 +58,7 @@ public class BrowseServlet extends HttpServlet {
         }
         try {
             User user = DAOFactory.getInstance().getUserDao().find(new Long(idStr));
+            req.getSession().removeAttribute("user");
             DAOFactory.getInstance().getUserDao().delete(user);
         } catch (DatabaseException e) {
             req.setAttribute("error", "ERROR: " + e.toString());
