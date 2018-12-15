@@ -42,6 +42,7 @@ public class BrowseServletTest extends MockServletTestCase {
         User user = new User(new Long(1000), "John", "Doe", new Date());
         List<User> users = new ArrayList<>();
         users.add(user);
+        getWebMockObjectFactory().getMockSession().setAttribute("user", user);
         getMockUserDao().expectAndReturn("findAll", users);
         getMockUserDao().expectAndReturn("find", new Long(1000), user);
         getMockUserDao().expect("delete", user);
