@@ -3,6 +3,7 @@ package ua.nure.kn.teteruk.usermanagment.agent;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Objects;
 import java.util.StringTokenizer;
 
@@ -30,7 +31,21 @@ public class RequestServer extends CyclicBehaviour {
     }
 
     private Collection<User> parseMessage(ACLMessage message) {
-        return null;
+        Collection<User> users = new LinkedList<>();
+
+        String content = message.getContent();
+        if (Objects.nonNull(content)) {
+            StringTokenizer tokenizer1 = new StringTokenizer(content, ",");
+            while (tokenizer1.hasMoreTokens()) {
+                String userInfo = tokenizer1.nextToken();
+                StringTokenizer tokenizer2 = new StringTokenizer(userInfo, ",");
+                String id = tokenizer2.nextToken();
+                String firstName = tokenizer2.nextToken();
+                String lastName = tokenizer2.nextToken();
+                users.add(new User(new Long(id), firstName, lastName, null));
+            }
+        }
+        return users;
     }
 
     private ACLMessage createReply(ACLMessage message) {
