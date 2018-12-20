@@ -6,6 +6,10 @@ import org.dbunit.util.search.SearchException;
 
 import jade.core.AID;
 import jade.core.Agent;
+import jade.domain.DFService;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
 import ua.nure.kn.teteruk.usermanagment.User;
 import ua.nure.kn.teteruk.usermanagment.db.DAOFactory;
 import ua.nure.kn.teteruk.usermanagment.db.exception.DatabaseException;
@@ -15,11 +19,30 @@ public class SearchAgent extends Agent {
     protected void setup() {
         super.setup();
         System.out.println(getAID().getName() + " started");
+
+        DFAgentDescription description = new DFAgentDescription();
+        description.setName(getAID());
+        ServiceDescription serviceDescription = new ServiceDescription();
+        serviceDescription.setName("JADE-searching");
+        serviceDescription.setType("searching");
+        description.addServices(serviceDescription);
+        try {
+            DFService.register(this, description);
+        } catch (FIPAException e) {
+            e.printStackTrace();
+        }
+
+        addBehaviour(new RequestServer());
     }
 
     @Override
     protected void takeDown() {
         System.out.println(getAID().getName() + " terminated");
+        try {
+            DFService.deregister(this);
+        } catch (FIPAException e) {
+            e.printStackTrace();
+        }
         super.takeDown();
     }
 
