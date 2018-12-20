@@ -1,15 +1,28 @@
 package ua.nure.kn.teteruk.usermanagment.db;
 
-import ua.nure.kn.teteruk.usermanagment.User;
-import ua.nure.kn.teteruk.usermanagment.db.exception.DatabaseException;
+import static java.util.Objects.nonNull;
+import static ua.nure.kn.teteruk.usermanagment.db.constants.ExceptionConstants.CANNOT_CLOSE_RESOURCES_EXCEPTION;
+import static ua.nure.kn.teteruk.usermanagment.db.constants.ExceptionConstants.QUERY_EXCEPTION;
+import static ua.nure.kn.teteruk.usermanagment.db.constants.ExceptionConstants.UNEXPECTED_COUNT_OF_ROWS;
+import static ua.nure.kn.teteruk.usermanagment.db.constants.SqlConstants.CALL_IDENTITY;
+import static ua.nure.kn.teteruk.usermanagment.db.constants.SqlConstants.CREATE;
+import static ua.nure.kn.teteruk.usermanagment.db.constants.SqlConstants.DELETE;
+import static ua.nure.kn.teteruk.usermanagment.db.constants.SqlConstants.FIND;
+import static ua.nure.kn.teteruk.usermanagment.db.constants.SqlConstants.FIND_ALL;
+import static ua.nure.kn.teteruk.usermanagment.db.constants.SqlConstants.FIND_BY_NAME;
+import static ua.nure.kn.teteruk.usermanagment.db.constants.SqlConstants.UPDATE;
 
-import java.sql.*;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import static java.util.Objects.nonNull;
-import static ua.nure.kn.teteruk.usermanagment.db.constants.ExceptionConstants.*;
-import static ua.nure.kn.teteruk.usermanagment.db.constants.SqlConstants.*;
+import ua.nure.kn.teteruk.usermanagment.User;
+import ua.nure.kn.teteruk.usermanagment.db.exception.DatabaseException;
 
 class HsqldbUserDao implements UserDao {
 
@@ -117,6 +130,34 @@ class HsqldbUserDao implements UserDao {
         try (Connection connection = connectionFactory.createConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL)) {
 
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                user = new User();
+                int k = 1;
+                user.setId(resultSet.getLong(k++));
+                user.setFirstName(resultSet.getString(k++));
+                user.setLastName(resultSet.getString(k++));
+                user.setDateOfBirth(resultSet.getDate(k));
+                result.add(user);
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException(QUERY_EXCEPTION, e);
+        } finally {
+            tryToCloseResultSet(resultSet);
+        }
+        return result;
+    }
+
+    @Override
+    public Collection<User> find(String firstName, String lastName) throws DatabaseException {
+        Collection<User> result = new LinkedList<>();
+        User user;
+        ResultSet resultSet = null;
+        try (Connection connection = connectionFactory.createConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_BY_NAME)) {
+
+            statement.setString(1, firstName);
+            statement.setString(1, lastName);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 user = new User();

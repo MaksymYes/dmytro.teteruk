@@ -10,5 +10,6 @@ public class SqlConstants {
     public static final String UPDATE = "UPDATE users SET firstname=?, lastname=?, dateofbirth=? WHERE id=?";
     public static final String DELETE = "DELETE FROM users WHERE id=?";
     public static final String FIND = "SELECT * FROM users WHERE id=?";
+    public static final String FIND_BY_NAME = "SELECT * FROM users WHERE firstname=? AND lastname=?";
     public static final String FIND_ALL = "SELECT * FROM users";
 }
