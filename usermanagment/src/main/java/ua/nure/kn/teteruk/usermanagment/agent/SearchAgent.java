@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.dbunit.util.search.SearchException;
 
+import jade.core.AID;
 import jade.core.Agent;
 import ua.nure.kn.teteruk.usermanagment.User;
 import ua.nure.kn.teteruk.usermanagment.db.DAOFactory;
@@ -28,7 +29,7 @@ public class SearchAgent extends Agent {
             if (!users.isEmpty()) {
                 showUsers(users);
             } else {
-                // todo request to other
+                addBehaviour(new SearchRequestBehaviour(new AID[] {}, firstName, lastName));
             }
         } catch (DatabaseException e) {
             throw new SearchException(e);
