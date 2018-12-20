@@ -1,11 +1,12 @@
 package ua.nure.kn.teteruk.usermanagment.db;
 
-import ua.nure.kn.teteruk.usermanagment.User;
-import ua.nure.kn.teteruk.usermanagment.db.exception.DatabaseException;
-
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import ua.nure.kn.teteruk.usermanagment.User;
+import ua.nure.kn.teteruk.usermanagment.db.exception.DatabaseException;
 
 public class MockUserDao implements UserDao {
 
@@ -37,7 +38,14 @@ public class MockUserDao implements UserDao {
 
     @Override
     public Collection<User> find(String firstName, String lastName) throws DatabaseException {
-        throw new UnsupportedOperationException();
+        Collection<User> resUsers = new ArrayList<>();
+        for (User user : users.values()) {
+            if (user.getFirstName() != null && user.getFirstName().equalsIgnoreCase(firstName)
+                    && user.getLastName().equalsIgnoreCase(lastName)) {
+                resUsers.add(user);
+            }
+        }
+        return resUsers;
     }
 
     @Override

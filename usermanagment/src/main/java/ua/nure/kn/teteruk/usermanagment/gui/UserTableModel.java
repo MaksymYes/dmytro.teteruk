@@ -1,11 +1,14 @@
 package ua.nure.kn.teteruk.usermanagment.gui;
 
-import ua.nure.kn.teteruk.usermanagment.User;
-import ua.nure.kn.teteruk.usermanagment.gui.util.Messages;
-
-import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+import javax.swing.table.AbstractTableModel;
+
+import ua.nure.kn.teteruk.usermanagment.User;
+import ua.nure.kn.teteruk.usermanagment.gui.util.Messages;
 
 public class UserTableModel extends AbstractTableModel {
 
@@ -13,7 +16,7 @@ public class UserTableModel extends AbstractTableModel {
             Messages.getString("AddPanel.last_name")};
     private static final Class[] COLUMN_CLASSES = {Long.class, String.class, String.class};
 
-    private ArrayList<User> users;
+    private List<User> users;
 
     public UserTableModel(Collection<User> users) {
         this.users = new ArrayList<>(users);
@@ -51,5 +54,13 @@ public class UserTableModel extends AbstractTableModel {
     @Override
     public int getColumnCount() {
         return COLUMN_CLASSES.length;
+    }
+
+    public void addUsers(Collection<User> users) {
+        this.users.addAll(users);
+    }
+
+    public void clearUsers() {
+        users = Collections.emptyList();
     }
 }

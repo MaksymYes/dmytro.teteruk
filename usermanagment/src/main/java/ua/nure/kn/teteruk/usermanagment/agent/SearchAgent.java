@@ -18,11 +18,15 @@ import ua.nure.kn.teteruk.usermanagment.db.exception.DatabaseException;
 public class SearchAgent extends Agent {
 
     private AID[] aids;
+    private SearchGui gui = null;
 
     @Override
     protected void setup() {
         super.setup();
         System.out.println(getAID().getName() + " started");
+
+        gui = new SearchGui(this);
+        gui.setVisible(true);
 
         DFAgentDescription description = new DFAgentDescription();
         description.setName(getAID());
@@ -67,12 +71,14 @@ public class SearchAgent extends Agent {
         } catch (FIPAException e) {
             e.printStackTrace();
         }
+        gui.setVisible(false);
+        gui.dispose();
         super.takeDown();
     }
 
     public void search(String firstName, String lastName) throws SearchException {
         try {
-            Collection<User> users = DAOFactory.getInstance().getUserDao().find(firstName, lastName);
+            Collection users = DAOFactory.getInstance().getUserDao().find(firstName, lastName);
             if (!users.isEmpty()) {
                 showUsers(users);
             } else {
@@ -84,6 +90,6 @@ public class SearchAgent extends Agent {
     }
 
     public void showUsers(Collection<User> users) {
-        // todo implement method
+        gui.addUsers(users);
     }
 }
