@@ -36,7 +36,7 @@ public class SearchAgent extends Agent {
         }
     }
 
-    private void showUsers(Collection<User> users) {
+    public void showUsers(Collection<User> users) {
         // todo implement method
     }
 }
