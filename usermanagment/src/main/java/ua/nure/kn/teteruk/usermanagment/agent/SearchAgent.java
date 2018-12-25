@@ -1,9 +1,5 @@
 package ua.nure.kn.teteruk.usermanagment.agent;
 
-import java.util.Collection;
-
-import org.dbunit.util.search.SearchException;
-
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
@@ -11,13 +7,18 @@ import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
+import org.dbunit.util.search.SearchException;
 import ua.nure.kn.teteruk.usermanagment.User;
 import ua.nure.kn.teteruk.usermanagment.db.DAOFactory;
 import ua.nure.kn.teteruk.usermanagment.db.exception.DatabaseException;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 public class SearchAgent extends Agent {
 
-    private AID[] aids;
+    private List<AID> aids;
     private SearchGui gui = null;
 
     @Override
@@ -40,7 +41,7 @@ public class SearchAgent extends Agent {
             e.printStackTrace();
         }
 
-        addBehaviour(new TickerBehaviour(this, 60000) {
+        addBehaviour(new TickerBehaviour(this, 5000) {
 
             @Override
             protected void onTick() {
@@ -50,10 +51,12 @@ public class SearchAgent extends Agent {
                 agentDescription.addServices(serviceDescription1);
                 try {
                     DFAgentDescription[] descriptions = DFService.search(myAgent, agentDescription);
-                    aids = new AID[descriptions.length];
+                    aids = new ArrayList<>();
                     for (int i = 0; i < descriptions.length; i++) {
                         DFAgentDescription d = descriptions[i];
-                        aids[i] = d.getName();
+                        if (!d.getName().equals(getAID())) {
+                            aids.add(d.getName());
+                        }
                     }
                 } catch (FIPAException e) {
                     e.printStackTrace();

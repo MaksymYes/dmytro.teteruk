@@ -61,6 +61,6 @@ public class UserTableModel extends AbstractTableModel {
     }
 
     public void clearUsers() {
-        users = Collections.emptyList();
+        users = new ArrayList<>();
     }
 }

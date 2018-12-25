@@ -1,124 +1,130 @@
 package ua.nure.kn.teteruk.usermanagment.agent;
 
-import static java.util.Objects.isNull;
-
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Collection;
-import java.util.Collections;
-
-import javax.swing.*;
-
 import org.dbunit.util.search.SearchException;
-
 import ua.nure.kn.teteruk.usermanagment.User;
 import ua.nure.kn.teteruk.usermanagment.gui.UserTableModel;
 import ua.nure.kn.teteruk.usermanagment.gui.util.Messages;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collection;
+
 public class SearchGui extends JFrame {
 
-    private static final int FRAME_HEIGHT = 400;
-    private static final int FRAME_WIDTH = 600;
-
     private SearchAgent agent;
+
     private JPanel contentPanel;
+
+    private JPanel tablePanel;
+
     private JTable table;
 
-    public SearchGui(SearchAgent searchAgent) {
-        agent = searchAgent;
-        init();
+    public SearchGui(SearchAgent agent) {
+        this.agent = agent;
+        initialize();
     }
 
-    private void init() {
+    private void initialize() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
-        this.setTitle(Messages.getString("SearcherFrame.name"));
-
+        this.setSize(800, 600);
+        this.setTitle("Searcher");
         this.setContentPane(getContentPanel());
     }
 
     private JPanel getContentPanel() {
-        if (isNull(contentPanel)) {
+        if (contentPanel == null) {
             contentPanel = new JPanel();
             contentPanel.setLayout(new BorderLayout());
-            contentPanel.add(getSearchPanel(), BorderLayout.CENTER);
+            contentPanel.add(getSearchPanel(), BorderLayout.NORTH);
+            contentPanel.add(new JScrollPane(getTablePanel()), BorderLayout.CENTER);
         }
         return contentPanel;
+    }
+
+    private JPanel getTablePanel() {
+        if (tablePanel == null) {
+            tablePanel = new JPanel(new BorderLayout());
+            tablePanel.add(getTable(), BorderLayout.CENTER);
+        }
+        return tablePanel;
+    }
+
+    private JTable getTable() {
+        if (table == null) {
+            table = new JTable(new UserTableModel(new ArrayList<>()));
+        }
+        return table;
     }
 
     private JPanel getSearchPanel() {
         return new SearchPanel(agent);
     }
 
-    public void addUsers(Collection<User> users) {
-        UserTableModel model = (UserTableModel) getTable().getModel();
-        model.addUsers(users);
-        this.repaint();
+    public static void main(String[] args) {
+        SearchAgent agent = new SearchAgent();
+        agent.setup();
     }
 
-    private void clearUsers() {
-        UserTableModel model = (UserTableModel) getTable().getModel();
-        model.clearUsers();
-        this.repaint();
-    }
+    class SearchPanel extends JPanel implements ActionListener {
+        SearchAgent agent;
 
-    private JTable getTable() {
-        if (table == null) {
-            table = new JTable();
-        }
-        table.setName("table");
-        initTable();
-        return table;
-    }
-
-    private void initTable() {
-        UserTableModel model;
-        model = new UserTableModel(Collections.emptyList());
-        table.setModel(model);
-    }
-
-    private void showTable() {
-        getContentPane().add(getTable(), BorderLayout.CENTER);
-        getTable().setVisible(true);
-        getTable().repaint();
-    }
-
-    private class SearchPanel extends JPanel implements ActionListener {
-
-        private SearchAgent agent;
         private JPanel buttonPanel;
+
         private JPanel fieldPanel;
+
+        private JButton cancelButton;
+
         private JButton searchButton;
+
         private JTextField firstNameField;
+
+        private JTextField dateOfBirthField;
+
         private JTextField lastNameField;
 
-        SearchPanel(SearchAgent agent) {
+
+        public SearchPanel(SearchAgent agent) {
             this.agent = agent;
-            init();
+            initialize();
         }
 
-        private void init() {
-            this.setName("searchPanel");
+        private void initialize() {
+            this.setName("addPanel");
             this.setLayout(new BorderLayout());
             this.add(getFieldPanel(), BorderLayout.NORTH);
-            add(getButtonsPanel(), BorderLayout.SOUTH);
+
         }
 
-        private JPanel getButtonsPanel() {
+        private JPanel getButtonPanel() {
             if (buttonPanel == null) {
                 buttonPanel = new JPanel();
                 buttonPanel.add(getSearchButton(), null);
+                buttonPanel.add(getCancelButton(), null);
             }
             return buttonPanel;
+        }
+
+        private JButton getCancelButton() {
+            if (cancelButton == null) {
+                cancelButton = new JButton();
+                cancelButton.setText(Messages.getString("AddPanel.cancel"));
+                cancelButton.setName("cancelButton");
+                cancelButton.setActionCommand("cancel");
+                cancelButton.addActionListener(this);
+            }
+            return cancelButton;
         }
 
         private JButton getSearchButton() {
             if (searchButton == null) {
                 searchButton = new JButton();
-                searchButton.setText(Messages.getString("SearchPanel.search"));
-                searchButton.setName("searchButton");
-                searchButton.setActionCommand("search");
+                searchButton.setText("Search");
+                searchButton.setName("okButton");
+                searchButton.setActionCommand("ok");
                 searchButton.addActionListener(this);
             }
             return searchButton;
@@ -128,14 +134,15 @@ public class SearchGui extends JFrame {
             if (fieldPanel == null) {
                 fieldPanel = new JPanel();
                 fieldPanel.setLayout(new GridLayout(2, 3));
-                addLabeledField(fieldPanel, Messages.getString("AddPanel.first_name"), getFirstNameField());
-                addLabeledField(fieldPanel, Messages.getString("AddPanel.last_name"), getLastNameField());
+                addLabeledField(fieldPanel, "FirstName", getFirstNameField());
                 fieldPanel.add(getSearchButton());
+                addLabeledField(fieldPanel, "LastName", getLastNameField());
+                fieldPanel.add(getCancelButton());
             }
             return fieldPanel;
         }
 
-        JTextField getLastNameField() {
+        protected JTextField getLastNameField() {
             if (lastNameField == null) {
                 lastNameField = new JTextField();
                 lastNameField.setName("lastNameField");
@@ -151,7 +158,7 @@ public class SearchGui extends JFrame {
             panel.add(textField);
         }
 
-        JTextField getFirstNameField() {
+        protected JTextField getFirstNameField() {
             if (firstNameField == null) {
                 firstNameField = new JTextField();
                 firstNameField.setName("firstNameField");
@@ -159,9 +166,8 @@ public class SearchGui extends JFrame {
             return firstNameField;
         }
 
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if ("search".equalsIgnoreCase(e.getActionCommand())) {
+        protected void doAction(ActionEvent e) throws ParseException {
+            if ("ok".equalsIgnoreCase(e.getActionCommand())) {
                 String firstName = getFirstNameField().getText();
                 String lastName = getLastNameField().getText();
                 try {
@@ -172,13 +178,33 @@ public class SearchGui extends JFrame {
                 }
             }
             clearFields();
-            this.setVisible(false);
-            showTable();
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            try {
+                doAction(e);
+            } catch (ParseException e1) {
+                return;
+            }
         }
 
         private void clearFields() {
             getFirstNameField().setText("");
             getLastNameField().setText("");
         }
+    }
+
+    public void addUsers(Collection<User> users) {
+        System.out.println("addUsers: " + users);
+        UserTableModel model = (UserTableModel) getTable().getModel();
+        model.addUsers(users);
+        this.repaint();
+    }
+
+    private void clearUsers() {
+        System.out.println("clearUsers: ");
+        UserTableModel model = (UserTableModel) getTable().getModel();
+        model.clearUsers();
+        this.repaint();
     }
 }

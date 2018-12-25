@@ -1,18 +1,19 @@
 package ua.nure.kn.teteruk.usermanagment.agent;
 
-import java.util.Objects;
-
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 
+import java.util.List;
+import java.util.Objects;
+
 public class SearchRequestBehaviour extends Behaviour {
 
-    private AID[] aids;
+    private List<AID> aids;
     private String firstName;
     private String lastName;
 
-    public SearchRequestBehaviour(AID[] aids, String firstName, String lastName) {
+    public SearchRequestBehaviour(List<AID> aids, String firstName, String lastName) {
         this.aids = aids;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -20,9 +21,9 @@ public class SearchRequestBehaviour extends Behaviour {
 
     @Override
     public void action() {
+        ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
+        message.setContent(firstName + "," + lastName);
         if (Objects.nonNull(aids)) {
-            ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
-            message.setContent(firstName + "," + lastName);
             for (AID aid : aids) {
                 message.addReceiver(aid);
             }

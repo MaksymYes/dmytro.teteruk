@@ -38,14 +38,7 @@ public class MockUserDao implements UserDao {
 
     @Override
     public Collection<User> find(String firstName, String lastName) throws DatabaseException {
-        Collection<User> resUsers = new ArrayList<>();
-        for (User user : users.values()) {
-            if (user.getFirstName() != null && user.getFirstName().equalsIgnoreCase(firstName)
-                    && user.getLastName().equalsIgnoreCase(lastName)) {
-                resUsers.add(user);
-            }
-        }
-        return resUsers;
+        throw new UnsupportedOperationException();
     }
 
     @Override

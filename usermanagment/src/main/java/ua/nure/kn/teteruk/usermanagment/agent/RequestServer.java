@@ -1,17 +1,14 @@
 package ua.nure.kn.teteruk.usermanagment.agent;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Objects;
-import java.util.StringTokenizer;
-
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import ua.nure.kn.teteruk.usermanagment.User;
 import ua.nure.kn.teteruk.usermanagment.db.DAOFactory;
 import ua.nure.kn.teteruk.usermanagment.db.exception.DatabaseException;
+
+import java.util.*;
+
+import static java.util.Objects.nonNull;
 
 public class RequestServer extends CyclicBehaviour {
 
@@ -34,8 +31,8 @@ public class RequestServer extends CyclicBehaviour {
         Collection<User> users = new LinkedList<>();
 
         String content = message.getContent();
-        if (Objects.nonNull(content)) {
-            StringTokenizer tokenizer1 = new StringTokenizer(content, ",");
+        if (nonNull(content) && !content.isEmpty()) {
+            StringTokenizer tokenizer1 = new StringTokenizer(content, ";");
             while (tokenizer1.hasMoreTokens()) {
                 String userInfo = tokenizer1.nextToken();
                 StringTokenizer tokenizer2 = new StringTokenizer(userInfo, ",");
@@ -50,27 +47,29 @@ public class RequestServer extends CyclicBehaviour {
 
     private ACLMessage createReply(ACLMessage message) {
         ACLMessage reply = message.createReply();
-
-        String contet = message.getContent();
-        StringTokenizer tokenizer = new StringTokenizer(contet, ",");
-        if (tokenizer.countTokens() == 2) {
-            String firstName = tokenizer.nextToken();
-            String lastName = tokenizer.nextToken();
-            Collection<User> users = null;
-            try {
-                users = DAOFactory.getInstance().getUserDao().find(firstName, lastName);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-                users = Collections.emptyList();
+        reply.setPerformative(ACLMessage.INFORM);
+        String content = message.getContent();
+        if (nonNull(content) && !content.isEmpty()) {
+            StringTokenizer tokenizer = new StringTokenizer(content, ",");
+            if (tokenizer.countTokens() == 2) {
+                String firstName = tokenizer.nextToken();
+                String lastName = tokenizer.nextToken();
+                Collection<User> users = null;
+                try {
+                    users = DAOFactory.getInstance().getUserDao().find(firstName, lastName);
+                } catch (DatabaseException e) {
+                    e.printStackTrace();
+                    users = Collections.emptyList();
+                }
+                StringBuffer buffer = new StringBuffer();
+                for (Iterator it = users.iterator(); it.hasNext(); ) {
+                    User user = (User) it.next();
+                    buffer.append(user.getId()).append(",")
+                            .append(user.getFirstName()).append(",")
+                            .append(user.getLastName()).append(";");
+                }
+                reply.setContent(buffer.toString());
             }
-            StringBuffer buffer = new StringBuffer();
-            for (Iterator it = users.iterator(); it.hasNext(); ) {
-                User user = (User) it.next();
-                buffer.append(user.getId()).append(",")
-                        .append(user.getFirstName()).append(",")
-                        .append(user.getLastName()).append(";");
-            }
-            reply.setContent(buffer.toString());
         }
         return reply;
     }

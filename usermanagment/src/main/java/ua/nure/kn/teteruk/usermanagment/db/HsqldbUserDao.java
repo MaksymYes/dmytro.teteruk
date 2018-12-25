@@ -157,7 +157,7 @@ class HsqldbUserDao implements UserDao {
              PreparedStatement statement = connection.prepareStatement(FIND_BY_NAME)) {
 
             statement.setString(1, firstName);
-            statement.setString(1, lastName);
+            statement.setString(2, lastName);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 user = new User();
